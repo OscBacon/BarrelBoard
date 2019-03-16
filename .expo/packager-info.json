@@ -2,8 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 13388,
+  "packagerPid": 7324,
   "expoServerNgrokUrl": "https://vg-c3d.anonymous.barrelboard.exp.direct",
   "packagerNgrokUrl": "https://packager.vg-c3d.anonymous.barrelboard.exp.direct",
-  "ngrokPid": 8984
+  "ngrokPid": 30700,
+  "webpackServerPort": null
 }
