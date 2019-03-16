@@ -134,8 +134,8 @@ export default class App extends React.Component {
             <FlatList 
               data = {this.state.centerColumn}
               renderItem = {({item}) => 
-                <TouchableNativeFeedback style={styles.charView} onPress={() => this.setState({text: this.state.text.concat(item.key)})}>
-                  <Text style={{fontSize: 30}}>{item.key}</Text>
+                <TouchableNativeFeedback onPress={() => this.setState({text: this.state.text.concat(item.key)})}><View style={styles.charView}>
+                  <Text style={{fontSize: 30}}>{item.key}</Text></View>
                 </TouchableNativeFeedback>}
               style={{padding:'10%'}}
             />
