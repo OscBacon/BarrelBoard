@@ -39,12 +39,20 @@ export default class App extends React.Component {
         rightColumn: letters_lower[2],
         text: 'Type a letter!',
         currCarousel: letters_lower,
-        shift: true
+        shift: true,
+        space: false
       }
   }
 
   onSwipeUp(gestureState) {
-    this.setState({text: '\n\n\nYou swiped up!!'});
+    // User has already entered a space
+    if (this.state.space) {
+      this.setState({text: this.state.text.slice(0,-1).concat('.')});
+      this.state.space = false;
+    } else {
+      this.setState({text: this.state.text.concat(' ')});
+      this.state.space = true;
+    }
   }
 
   onSwipeLeft(gestureState) {
