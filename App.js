@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, List, ListItem, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -28,6 +28,10 @@ export default class App extends React.Component {
                 </View>}
               style={{padding:'10%'}}
             />
+
+            <View style={styles.shiftShapeView}>
+              <Image style={{resizeMode: 'contain'}} source={require('./assets/uparrow.png')} />
+            </View>
           </View>
           <View style={styles.focusView}>
             <FlatList 
@@ -48,6 +52,10 @@ export default class App extends React.Component {
                   </View>}
                 style={{padding:'10%'}}
               />
+
+            <View style={styles.menuShapeView}>
+              <Image style={{resizeMode: 'contain'}} source={require('./assets/3dots.png')} />
+            </View>
           </View>
         </View>
       </View>
@@ -62,7 +70,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   focusView: {
     flex: 2,
     backgroundColor: 'steelblue',
@@ -72,13 +79,32 @@ const styles = StyleSheet.create({
   },
   peripheralView: {
     flex: 1,
-    backgroundColor: 'skyblue'
+    backgroundColor: 'skyblue',
+    alignItems: 'center',
+    padding:'1%'
   },
-  charView:{
+  charView: {
     padding: '15%', 
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    margin: '5%'
+    margin: 5,
+    flex:1
+  },
+  shiftShapeView: {
+    width: 80,
+    height: 80,
+    borderRadius: 80/2,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginBottom: '10%' 
+  },
+  menuShapeView: {
+    width: 80,
+    height: 80,
+    borderRadius: 80/2,
+    borderColor: 'black',
+    borderWidth: 1,
+    marginBottom: '10%'
   }
 });
