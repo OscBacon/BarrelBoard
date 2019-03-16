@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image, TouchableNativeFeedback } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 var focus = 1;
@@ -134,9 +134,9 @@ export default class App extends React.Component {
             <FlatList 
               data = {this.state.centerColumn}
               renderItem = {({item}) => 
-                <View style={styles.charView}>
+                <TouchableNativeFeedback style={styles.charView} onPress={() => this.setState({text: this.state.text.concat(item.key)})}>
                   <Text style={{fontSize: 30}}>{item.key}</Text>
-                </View>}
+                </TouchableNativeFeedback>}
               style={{padding:'10%'}}
             />
           </View>
