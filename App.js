@@ -1,24 +1,113 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+
+var focus = 1;
+
+var letters_lower = [
+  [{key:'q'}, {key:'a'}, {key:'.'}],
+  [{key:'w'}, {key:'s'}, {key:'z'}],
+  [{key:'e'}, {key:'d'}, {key:'x'}],
+  [{key:'r'}, {key:'f'}, {key:'c'}],
+  [{key:'t'}, {key:'g'}, {key:'v'}],
+  [{key:'y'}, {key:'h'}, {key:'b'}],
+  [{key:'u'}, {key:'j'}, {key:'n'}],
+  [{key:'i'}, {key:'k'}, {key:'m'}],
+  [{key:'o'}, {key:'l'}, {key:'!'}],
+  [{key:'p'}, {key:'?'}, {key:','}]
+];
+
+var letters_upper = [
+  [{key:'Q'}, {key:'A'}, {key:'.'}],
+  [{key:'W'}, {key:'S'}, {key:'Z'}],
+  [{key:'E'}, {key:'D'}, {key:'X'}],
+  [{key:'R'}, {key:'F'}, {key:'C'}],
+  [{key:'T'}, {key:'G'}, {key:'V'}],
+  [{key:'Y'}, {key:'H'}, {key:'B'}],
+  [{key:'U'}, {key:'J'}, {key:'N'}],
+  [{key:'I'}, {key:'K'}, {key:'M'}],
+  [{key:'O'}, {key:'L'}, {key:'!'}],
+  [{key:'P'}, {key:'?'}, {key:','}]
+];
 
 export default class App extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        leftColumn: [{key:'a'}, {key:'b'}, {key:'c'}],
-        centerColumn: [{key:'a'}, {key:'b'}, {key:'c'}],
-        rightColumn: [{key:'a'}, {key:'b'}, {key:'c'}]
+        leftColumn: letters_lower[0],
+        centerColumn: letters_lower[1],
+        rightColumn: letters_lower[2],
+        text: 'Type a letter!',
+        currCarousel: letters_lower,
+        shift: true
       }
   }
 
+  onSwipeUp(gestureState) {
+    this.setState({text: '\n\n\nYou swiped up!!'});
+  }
+
+  onSwipeLeft(gestureState) {
+    focus = focus + 1;
+    if (focus == this.state.currCarousel.length){
+      focus = 0;
+    }
+    this.setState({text: '\n\n\nYou swiped left!' + focus});
+    
+    if (focus == 0) {
+      this.setState({leftColumn: this.state.currCarousel[this.state.currCarousel.length - 1],
+                     centerColumn: this.state.currCarousel[0],
+                     rightColumn: this.state.currCarousel[1]});
+    } else if (focus == this.state.currCarousel.length -1) {
+      this.setState({leftColumn: this.state.currCarousel[focus - 1],
+        centerColumn: this.state.currCarousel[focus],
+        rightColumn: this.state.currCarousel[0]});
+    } else {
+      this.setState({leftColumn: this.state.currCarousel[focus -1],
+                     centerColumn: this.state.currCarousel[focus],
+                     rightColumn: this.state.currCarousel[focus + 1]});
+    }
+  }
+   
+  onSwipeRight(gestureState) {
+    focus = focus - 1;
+    if (focus < 0) {
+      focus = this.state.currCarousel.length - 1;
+    }
+    this.setState({myText: '\n\n\nYou swiped right!' + focus});
+    
+    if (focus == 0) {
+      this.setState({leftColumn: this.state.currCarousel[this.state.currCarousel.length - 1],
+                     centerColumn: this.state.currCarousel[0],
+                     rightColumn: this.state.currCarousel[1]});
+    } else if (focus == this.state.currCarousel.length -1) {
+      this.setState({leftColumn: this.state.currCarousel[focus - 1],
+        centerColumn: this.state.currCarousel[focus],
+        rightColumn: this.state.currCarousel[0]});
+    } else {
+      this.setState({leftColumn: this.state.currCarousel[focus -1],
+                     centerColumn: this.state.currCarousel[focus],
+                     rightColumn: this.state.currCarousel[focus + 1]});
+    }
+  }
+
   render() {
+    const config = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
+
     return (
       <View style={{flex: 1}}>
         <View style={{flex: 1, backgroundColor: 'powderblue', justifyContent: "center", alignItems:"center"}}>
-          <Text>Hi</Text>
+          <Text>{this.state.text}</Text>
         </View>
 
-        <View style={{flex: 1, flexDirection:'row'}}>
+        <GestureRecognizer style={{flex:1, flexDirection: 'row'}}
+                onSwipeUp={(state) => this.onSwipeUp(state)}
+                onSwipeLeft={(state) => this.onSwipeLeft(state)}
+                onSwipeRight={(state) => this.onSwipeRight(state)}
+                config={config}>
           <View style={styles.peripheralView}>
             <FlatList
               data = {this.state.leftColumn}
@@ -57,7 +146,7 @@ export default class App extends React.Component {
               <Image style={{resizeMode: 'contain'}} source={require('./assets/3dots.png')} />
             </View>
           </View>
-        </View>
+        </GestureRecognizer>
       </View>
     );
   }
