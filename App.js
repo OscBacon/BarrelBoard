@@ -39,19 +39,19 @@ export default class App extends React.Component {
         rightColumn: letters_lower[2],
         text: 'Type a letter!',
         currCarousel: letters_lower,
-        shift: true,
+        shift: false,
         space: false
       }
   }
 
   onSwipeUp(gestureState) {
-    // User has already entered a space
+    // User has already entered a space, replace space by '.'
     if (this.state.space) {
       this.setState({text: this.state.text.slice(0,-1).concat('.')});
-      this.state.space = false;
+      this.setState({space: false});
     } else {
       this.setState({text: this.state.text.concat(' ')});
-      this.state.space = true;
+      this.setState({space: true});
     }
   }
 
@@ -60,8 +60,20 @@ export default class App extends React.Component {
     if (focus == this.state.currCarousel.length){
       focus = 0;
     }
-    this.setState({text: '\n\n\nYou swiped left!' + focus});
     
+    this.updateColumns();
+  }
+   
+  onSwipeRight(gestureState) {
+    focus = focus - 1;
+    if (focus < 0) {
+      focus = this.state.currCarousel.length - 1;
+    }
+    
+    this.updateColumns();
+  }
+
+  updateColumns() {
     if (focus == 0) {
       this.setState({leftColumn: this.state.currCarousel[this.state.currCarousel.length - 1],
                      centerColumn: this.state.currCarousel[0],
@@ -76,26 +88,14 @@ export default class App extends React.Component {
                      rightColumn: this.state.currCarousel[focus + 1]});
     }
   }
-   
-  onSwipeRight(gestureState) {
-    focus = focus - 1;
-    if (focus < 0) {
-      focus = this.state.currCarousel.length - 1;
-    }
-    this.setState({myText: '\n\n\nYou swiped right!' + focus});
-    
-    if (focus == 0) {
-      this.setState({leftColumn: this.state.currCarousel[this.state.currCarousel.length - 1],
-                     centerColumn: this.state.currCarousel[0],
-                     rightColumn: this.state.currCarousel[1]});
-    } else if (focus == this.state.currCarousel.length -1) {
-      this.setState({leftColumn: this.state.currCarousel[focus - 1],
-        centerColumn: this.state.currCarousel[focus],
-        rightColumn: this.state.currCarousel[0]});
-    } else {
-      this.setState({leftColumn: this.state.currCarousel[focus -1],
-                     centerColumn: this.state.currCarousel[focus],
-                     rightColumn: this.state.currCarousel[focus + 1]});
+
+  pressShift() {
+    if (this.state.shift == true && this.state.currCarousel == letters_upper) {
+      this.setState({shift: false, currCarousel: letters_lower}, () => this.updateColumns());
+    } else if (this.state.shift == false && this.state.currCarousel == letters_lower) {
+      this.setState({shift: true, currCarousel: letters_upper}, () => this.updateColumns());
+    } else{
+      return;
     }
   }
 
@@ -126,9 +126,11 @@ export default class App extends React.Component {
               style={{padding:'10%'}}
             />
 
-            <View style={styles.shiftShapeView}>
-              <Image style={{resizeMode: 'contain'}} source={require('./assets/uparrow.png')} />
-            </View>
+            <TouchableNativeFeedback onPress={() => this.pressShift()}>
+              <View style={[styles.shiftShapeView, this.state.shift && styles.buttonPressed]}>
+                <Image style={{resizeMode: 'contain'}} source={require('./assets/uparrow.png')} />
+              </View>
+            </TouchableNativeFeedback>
           </View>
           <View style={styles.focusView}>
             <FlatList 
@@ -203,5 +205,8 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     marginBottom: '10%'
+  },
+  buttonPressed: {
+    backgroundColor: 'steelblue'
   }
 });
