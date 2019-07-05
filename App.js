@@ -2,8 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableNativeFeedback } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-var focus = 1;
-
 var letters_lower = [
   [{key:'q'}, {key:'a'}, {key:'.'}],
   [{key:'w'}, {key:'s'}, {key:'z'}],
@@ -40,7 +38,8 @@ export default class App extends React.Component {
         text: 'Type a letter!',
         currCarousel: letters_lower,
         shift: false,
-        space: false
+        space: false,
+	focus: 1
       }
   }
 
@@ -56,36 +55,42 @@ export default class App extends React.Component {
   }
 
   onSwipeLeft(gestureState) {
-    focus = focus + 1;
-    if (focus == this.state.currCarousel.length){
-      focus = 0;
-    }
+    this.setState((state) => {
+      if (state.focus + 1 == state.currCarousel.length) { 
+        return {focus: 0};
+      } else {
+	return {focus: state.focus + 1};
+      }
+    });
     
     this.updateColumns();
   }
    
   onSwipeRight(gestureState) {
-    focus = focus - 1;
-    if (focus < 0) {
-      focus = this.state.currCarousel.length - 1;
-    }
-    
+    this.setState((state) => {
+      if (state.focus - 1 < 0) { 
+        return {focus: state.currCarousel.length - 1};
+      } else {
+	return {focus: state.focus - 1};
+      }
+    });
+ 
     this.updateColumns();
   }
 
   updateColumns() {
-    if (focus == 0) {
+    if (this.focus == 0) {
       this.setState({leftColumn: this.state.currCarousel[this.state.currCarousel.length - 1],
                      centerColumn: this.state.currCarousel[0],
                      rightColumn: this.state.currCarousel[1]});
-    } else if (focus == this.state.currCarousel.length -1) {
-      this.setState({leftColumn: this.state.currCarousel[focus - 1],
-        centerColumn: this.state.currCarousel[focus],
+    } else if (this.focus == this.state.currCarousel.length -1) {
+      this.setState({leftColumn: this.state.currCarousel[this.focus - 1],
+        centerColumn: this.state.currCarousel[this.focus],
         rightColumn: this.state.currCarousel[0]});
     } else {
-      this.setState({leftColumn: this.state.currCarousel[focus -1],
-                     centerColumn: this.state.currCarousel[focus],
-                     rightColumn: this.state.currCarousel[focus + 1]});
+      this.setState({leftColumn: this.state.currCarousel[this.focus -1],
+                     centerColumn: this.state.currCarousel[this.focus],
+                     rightColumn: this.state.currCarousel[this.focus + 1]});
     }
   }
 
